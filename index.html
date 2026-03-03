@@ -1149,8 +1149,8 @@ function renderFacades(){
       <div id="facade-calc-${f.id}"></div>
       <div class="quote-section-title" style="font-size:0.72rem;margin-top:12px">ירידות רובוט</div>
       <div class="form-grid three" style="margin-bottom:16px">
-        <div class="field"><label>עמודות חלונות</label><input type="number" id="f-cols-${f.id}" value="${f.windowCols||0}" placeholder="0" onchange="upd(${f.id},'windowCols',+this.value);upd(${f.id},'drops',+this.value)"></div>
-        <div class="field"><label>ירידות (= עמודות)</label><div class="input-unit"><span class="unit-badge">ירידות</span><input type="number" id="f-drops-${f.id}" value="${f.drops||0}" readonly style="background:var(--off-white)"></div></div>
+        <div class="field"><label>טורי חלונות</label><input type="number" id="f-cols-${f.id}" value="${f.windowCols||0}" placeholder="0" onchange="upd(${f.id},'windowCols',+this.value);upd(${f.id},'drops',Math.ceil(+this.value/3))"></div>
+        <div class="field"><label>דרופים</label><div class="input-unit"><span class="unit-badge">דרופים</span><input type="number" id="f-drops-${f.id}" value="${f.drops||0}" readonly style="background:var(--off-white)"></div></div>
       </div>
       <div class="field" style="margin-bottom:16px"><label>הערות חזית</label><textarea placeholder="ממצאים מיוחדים..." onchange="upd(${f.id},'notes',this.value)">${f.notes||''}</textarea></div>
       <div class="quote-section-title" style="font-size:0.72rem">רשימת משימות</div>
