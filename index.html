@@ -1172,7 +1172,7 @@ function upd(id,key,val){
   f[key]=val;
   const d=document.getElementById('fname-display-'+id);
   if(d)d.textContent=(f.name||'חזית חדשה')+(f.direction?' ('+f.direction+')':'');
-  if(key==='windowCols'){const dr=document.getElementById('f-drops-'+id);if(dr)dr.value=val;}
+  if(key==='windowCols'){const dr=document.getElementById('f-drops-'+id);if(dr){const drops=Math.ceil(val/3);dr.value=drops;f.drops=drops;}}
 }
 
 function renderFC(id){
