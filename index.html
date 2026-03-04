@@ -1333,8 +1333,8 @@ function calcYear(year){
   d.facadeRows.forEach(f=>{
     const ppsq=f.pricePerSqm?` (${d.cur}${f.pricePerSqm}/מ״ר)`:'';
     const ed=(v)=>`<span class="editable" contenteditable="true">${v}</span>`;
-    if(f.systemSqm>0){cleanSub+=f.robotTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':'')')}</td><td><span class="tag-robot">ניקוי רובוט</span></td><td>${ed(f.systemSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.robotTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td class="teal-text">${ed(d.cur+f.robotTotal.toLocaleString())}</td></tr>`;}
-    if(f.tradSqm>0){cleanSub+=f.tradTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':'')')}</td><td><span class="tag-traditional">ניקוי מסורתי</span></td><td>${ed(f.tradSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.tradTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td>${ed(d.cur+f.tradTotal.toLocaleString())}</td></tr>`;}
+    if(f.systemSqm>0){cleanSub+=f.robotTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':''))}</td><td><span class="tag-robot">ניקוי רובוט</span></td><td>${ed(f.systemSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.robotTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td class="teal-text">${ed(d.cur+f.robotTotal.toLocaleString())}</td></tr>`;}
+    if(f.tradSqm>0){cleanSub+=f.tradTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':''))}</td><td><span class="tag-traditional">ניקוי מסורתי</span></td><td>${ed(f.tradSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.tradTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td>${ed(d.cur+f.tradTotal.toLocaleString())}</td></tr>`;}
   });
   const bVat=cleanSub+scanNet;
   const vatAmt=Math.round(bVat*d.vat/100);
