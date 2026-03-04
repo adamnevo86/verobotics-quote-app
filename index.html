@@ -565,6 +565,34 @@
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast-icon { color: var(--teal); font-size: 1.1rem; }
 
+  /* ─── EDITABLE CELLS ─── */
+  .editable {
+    cursor: text;
+    border-radius: 4px;
+    transition: background 0.15s, outline 0.15s;
+    outline: 2px solid transparent;
+    display: inline-block;
+    min-width: 20px;
+  }
+  .editable:hover { background: rgba(0,201,167,0.08); outline: 2px solid rgba(0,201,167,0.3); }
+  .editable:focus { background: rgba(0,201,167,0.12); outline: 2px solid var(--teal); }
+  .edit-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,201,167,0.06);
+    border: 1px solid rgba(0,201,167,0.2);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    color: #1a6054;
+    margin-bottom: 16px;
+  }
+  @media print {
+    .edit-hint { display: none !important; }
+    .editable { outline: none !important; background: transparent !important; }
+  }
+
   /* ─── PRINT / QUOTE DOCUMENT ─── */
   #quote-doc {
     background: white;
@@ -1011,18 +1039,33 @@
       <div class="card-icon">💰</div>
       <div>
         <div class="card-title">הגדרות תמחור</div>
-        <div class="card-subtitle">קבע תעריפי בסיס — ניתן לעקוף ידנית בכל חזית</div>
+        <div class="card-subtitle">תמחור מבוסס דרופים × קושי × תעריף יומי — הלקוח רואה מחיר למ״ר</div>
       </div>
     </div>
+    <div class="hint"><span class="hint-icon">⚙️</span>המחיר מחושב לפי: דרופים × מכפיל קושי ÷ 14 ירידות ביום × תעריף יומי. התוצאה מחולקת במ״ר ומוצגת ללקוח כמחיר למ״ר.</div>
     <div class="pricing-config">
-      <div class="pricing-config-title">⚙️ תעריפי בסיס</div>
+      <div class="pricing-config-title">⚙️ פרמטרי תמחור בסיס</div>
       <div class="form-grid three">
-        <div class="field"><label>תעריף ניקוי רובוט (למ״ר/מחזור)</label><div class="input-unit"><span class="unit-badge">₪</span><input type="number" id="rate-robot" value="0.5" step="0.05" onchange="recalcAll()"></div></div>
-        <div class="field"><label>תעריף ניקוי מסורתי (למ״ר/מחזור)</label><div class="input-unit"><span class="unit-badge">₪</span><input type="number" id="rate-traditional" value="0.9" step="0.05" onchange="recalcAll()"></div></div>
-        <div class="field"><label>הנחה ניקוי רובוט</label><div class="input-unit"><span class="unit-badge">%</span><input type="number" id="discount-robot" value="20" min="0" max="100" onchange="recalcAll()"></div></div>
-        <div class="field"><label>מחזורים בשנה</label><input type="number" id="cycles-per-year" value="2" min="1" onchange="recalcAll()"></div>
+        <div class="field"><label>תעריף יומי מפעיל</label><div class="input-unit"><span class="unit-badge">₪/יום</span><input type="number" id="day-rate" value="2200" onchange="recalcAll()"></div></div>
+        <div class="field"><label>ירידות ביום (בסיס)</label><div class="input-unit"><span class="unit-badge">ירידות</span><input type="number" id="drops-per-day" value="14" onchange="recalcAll()"></div></div>
+        <div class="field"><label>קומות לדרופ</label><div class="input-unit"><span class="unit-badge">קומות</span><input type="number" id="floors-per-drop" value="2" onchange="recalcAll()"></div></div>
+        <div class="field"><label>מחזורים בשנה</label><input type="number" id="cycles-per-year" value="3" min="1" onchange="recalcAll()"></div>
         <div class="field"><label>מע״מ</label><div class="input-unit"><span class="unit-badge">%</span><input type="number" id="vat-rate" value="18" onchange="recalcAll()"></div></div>
         <div class="field"><label>מטבע</label><select id="currency" onchange="recalcAll()"><option value="₪">₪ שקל</option><option value="$">$ דולר</option><option value="€">€ אירו</option></select></div>
+      </div>
+    </div>
+    <div class="pricing-config" style="margin-top:16px">
+      <div class="pricing-config-title">📊 מכפילי קושי</div>
+      <div class="form-grid three">
+        <div class="field"><label>גישה לגג — קל</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-roof-easy" value="1.0" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>גישה לגג — בינוני</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-roof-medium" value="1.15" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>גישה לגג — קשה</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-roof-hard" value="1.3" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>לכלוך — רגיל</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-dirt-normal" value="1.0" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>לכלוך — כבד</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-dirt-heavy" value="1.2" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"></div>
+        <div class="field"><label>גובה — עד 20 קומות</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-height-low" value="1.0" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>גובה — 20–35 קומות</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-height-mid" value="1.15" step="0.05" onchange="recalcAll()"></div></div>
+        <div class="field"><label>גובה — מעל 35 קומות</label><div class="input-unit"><span class="unit-badge">×</span><input type="number" id="mult-height-high" value="1.3" step="0.05" onchange="recalcAll()"></div></div>
       </div>
     </div>
     <div class="pricing-config" style="margin-top:16px">
@@ -1034,7 +1077,7 @@
         <div class="field"><label>הנחה שנה 3</label><div class="input-unit"><span class="unit-badge">%</span><input type="number" id="scan-disc-3" value="50" onchange="recalcAll()"></div></div>
       </div>
     </div>
-    <div class="quote-section-title" style="margin-top:24px">תמחור לפי חזית</div>
+    <div class="quote-section-title" style="margin-top:24px">תמחור לפי חזית — סיכום ועריכה</div>
     <div id="facade-pricing-table"></div>
     <div class="nav-row">
       <button class="btn btn-secondary" onclick="goTo(2)">← חזרה</button>
@@ -1140,6 +1183,13 @@ function renderFacades(){
         <div class="field"><label>מבנה חזית</label><select onchange="upd(${f.id},'facadeStructure',this.value)"><option value="">בחר...</option><option value="single">זכוכית בודדת</option><option value="double">עור כפול</option><option value="iso">איזולציה</option></select></div>
         <div class="field"><label>Go / No Go</label><select id="f-gonogo-${f.id}" onchange="upd(${f.id},'goNogo',this.value)"><option value="go">✅ Go</option><option value="partial">⚠️ חלקי</option><option value="nogo">❌ No Go</option></select></div>
       </div>
+      <div class="quote-section-title" style="font-size:0.72rem;margin-top:4px">גורמי קושי לתמחור</div>
+      <div class="form-grid three" style="margin-bottom:16px">
+        <div class="field"><label>גישה לגג</label><select onchange="upd(${f.id},'roofAccess',this.value)"><option value="easy" ${f.roofAccess==='easy'||!f.roofAccess?'selected':''}>קל (×1.0)</option><option value="medium" ${f.roofAccess==='medium'?'selected':''}>בינוני (×1.15)</option><option value="hard" ${f.roofAccess==='hard'?'selected':''}>קשה (×1.3)</option></select></div>
+        <div class="field"><label>רמת לכלוך</label><select onchange="upd(${f.id},'dirtLevel',this.value)"><option value="normal" ${f.dirtLevel==='normal'||!f.dirtLevel?'selected':''}>רגיל (×1.0)</option><option value="heavy" ${f.dirtLevel==='heavy'?'selected':''}>כבד (×1.2)</option></select></div>
+        <div class="field"><label>טייר גובה</label><select onchange="upd(${f.id},'heightTier',this.value)"><option value="low" ${f.heightTier==='low'||!f.heightTier?'selected':''}>עד 20 קומות (×1.0)</option><option value="mid" ${f.heightTier==='mid'?'selected':''}>20–35 קומות (×1.15)</option><option value="high" ${f.heightTier==='high'?'selected':''}>מעל 35 קומות (×1.3)</option></select></div>
+      </div>
+      <div id="facade-price-preview-${f.id}" class="facade-price-preview"></div>
       <div class="quote-section-title" style="font-size:0.72rem">שטחים וחלוקת ניקיון</div>
       <div class="form-grid three" style="margin-bottom:12px">
         <div class="field"><label>מ״ר ניקוי רובוט</label><div class="input-unit"><span class="unit-badge">מ״ר</span><input type="number" id="f-system-${f.id}" value="${f.systemSqm||0}" onchange="upd(${f.id},'systemSqm',+this.value);renderFC(${f.id})"></div></div>
@@ -1189,29 +1239,60 @@ function renderFC(id){
   </div>`;
 }
 
+// ── PRICING ENGINE (drops × difficulty × day rate) ──
+function getMults(){
+  const g=id=>{const e=document.getElementById(id);return e?parseFloat(e.value)||1:1;};
+  return{
+    roof:{easy:g('mult-roof-easy'),medium:g('mult-roof-medium'),hard:g('mult-roof-hard')},
+    dirt:{normal:g('mult-dirt-normal'),heavy:g('mult-dirt-heavy')},
+    height:{low:g('mult-height-low'),mid:g('mult-height-mid'),high:g('mult-height-high')}
+  };
+}
+
+function calcFacadePrice(f){
+  const dayRate=parseFloat(document.getElementById('day-rate').value)||2200;
+  const dropsPerDay=parseFloat(document.getElementById('drops-per-day').value)||14;
+  const cycles=parseInt(document.getElementById('cycles-per-year').value)||3;
+  const mults=getMults();
+  const roofM=mults.roof[f.roofAccess||'easy']||1;
+  const dirtM=mults.dirt[f.dirtLevel||'normal']||1;
+  const heightM=mults.height[f.heightTier||'low']||1;
+  const combinedMult=roofM*dirtM*heightM;
+  const drops=f.drops||0;
+  const effectiveDrops=drops*combinedMult;
+  const opDays=effectiveDrops/dropsPerDay;
+  const costPerCycle=Math.round(opDays*dayRate);
+  const totalSqm=(f.systemSqm||0)+(f.traditionalSqm||0);
+  const pricePerSqm=totalSqm>0?Math.round(costPerCycle/totalSqm*10)/10:0;
+  const robotTotal=Math.round((f.systemSqm||0)*pricePerSqm*cycles);
+  const tradTotal=Math.round((f.traditionalSqm||0)*pricePerSqm*cycles);
+  return{costPerCycle,pricePerSqm,robotTotal,tradTotal,cycles,combinedMult,effectiveDrops,opDays};
+}
+
 function buildPricingTable(){
   const c=document.getElementById('facade-pricing-table');
   if(!facades.length){c.innerHTML='<p style="color:var(--gray);padding:12px 0;font-size:0.85rem">הוסף חזיתות בשלב הקודם</p>';return;}
-  const rRate=parseFloat(document.getElementById('rate-robot').value)||0.5;
-  const tRate=parseFloat(document.getElementById('rate-traditional').value)||0.9;
-  const cycles=parseInt(document.getElementById('cycles-per-year').value)||2;
   const cur=document.getElementById('currency').value||'₪';
   let html='';
   facades.forEach(f=>{
     if(!f.priceOverrides)f.priceOverrides={};
-    const sysP=Math.round(f.systemSqm*rRate*cycles);
-    const tradP=Math.round(f.traditionalSqm*tRate*cycles);
+    const calc=calcFacadePrice(f);
+    const robotVal=f.priceOverrides.robotPrice!==undefined?f.priceOverrides.robotPrice:calc.robotTotal;
+    const tradVal=f.priceOverrides.tradPrice!==undefined?f.priceOverrides.tradPrice:calc.tradTotal;
+    const cyclesVal=f.priceOverrides.cycles||calc.cycles;
     html+=`<div style="border:1.5px solid var(--gray-light);border-radius:10px;padding:16px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <strong>${f.name||'חזית'}${f.direction?' ('+f.direction+')':''}</strong>
         <span class="gonogo ${f.goNogo||'go'}">${f.goNogo==='nogo'?'❌ No Go':f.goNogo==='partial'?'⚠️ חלקי':'✅ Go'}</span>
       </div>
-      <div class="form-grid three">
-        <div class="field"><label>מחיר רובוט (סה״כ)</label><div class="input-unit"><span class="unit-badge">${cur}</span><input type="number" id="fp-robot-${f.id}" value="${f.priceOverrides.robotPrice!==undefined?f.priceOverrides.robotPrice:sysP}" onchange="f_po(${f.id},'robotPrice',+this.value)"></div></div>
-        <div class="field"><label>מחיר מסורתי (סה״כ)</label><div class="input-unit"><span class="unit-badge">${cur}</span><input type="number" id="fp-trad-${f.id}" value="${f.priceOverrides.tradPrice!==undefined?f.priceOverrides.tradPrice:tradP}" onchange="f_po(${f.id},'tradPrice',+this.value)"></div></div>
-        <div class="field"><label>מחזורים</label><input type="number" id="fp-cycles-${f.id}" value="${f.priceOverrides.cycles||cycles}" onchange="f_po(${f.id},'cycles',+this.value)"></div>
+      <div style="background:rgba(0,201,167,0.06);border:1px solid rgba(0,201,167,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:0.8rem;color:#1a5c4a">
+        🔢 ${f.drops||0} דרופים × מכפיל ${calc.combinedMult.toFixed(2)} = ${calc.effectiveDrops.toFixed(1)} דרופים אפקטיביים → ${calc.opDays.toFixed(2)} ימי עבודה → <strong>${cur}${calc.costPerCycle.toLocaleString()} למחזור</strong> | <strong>${cur}${calc.pricePerSqm}/מ״ר</strong>
       </div>
-      <div style="font-size:0.8rem;color:var(--gray);margin-top:8px">מחיר מוצע למחזור: <strong>${cur}${Math.round((sysP+tradP)/cycles).toLocaleString()}</strong></div>
+      <div class="form-grid three">
+        <div class="field"><label>מחיר רובוט — סה״כ שנתי</label><div class="input-unit"><span class="unit-badge">${cur}</span><input type="number" id="fp-robot-${f.id}" value="${robotVal}" onchange="f_po(${f.id},'robotPrice',+this.value)"></div></div>
+        <div class="field"><label>מחיר מסורתי — סה״כ שנתי</label><div class="input-unit"><span class="unit-badge">${cur}</span><input type="number" id="fp-trad-${f.id}" value="${tradVal}" onchange="f_po(${f.id},'tradPrice',+this.value)"></div></div>
+        <div class="field"><label>מחזורים</label><input type="number" id="fp-cycles-${f.id}" value="${cyclesVal}" onchange="f_po(${f.id},'cycles',+this.value)"></div>
+      </div>
     </div>`;
   });
   c.innerHTML=html;
@@ -1228,18 +1309,16 @@ function buildQuote(){
   const disc1=parseFloat(document.getElementById('scan-disc-1').value)||100;
   const disc2=parseFloat(document.getElementById('scan-disc-2').value)||75;
   const disc3=parseFloat(document.getElementById('scan-disc-3').value)||50;
-  const rDisc=parseFloat(document.getElementById('discount-robot').value)||20;
-  const defCycles=parseInt(document.getElementById('cycles-per-year').value)||2;
-  const rRate=parseFloat(document.getElementById('rate-robot').value)||0.5;
-  const tRate=parseFloat(document.getElementById('rate-traditional').value)||0.9;
+  const defCycles=parseInt(document.getElementById('cycles-per-year').value)||3;
   const facadeRows=facades.map(f=>{
     const po=f.priceOverrides||{};
+    const calc=calcFacadePrice(f);
     const cycles=po.cycles||defCycles;
-    const robotTotal=po.robotPrice!==undefined?po.robotPrice:Math.round(f.systemSqm*rRate*cycles);
-    const tradTotal=po.tradPrice!==undefined?po.tradPrice:Math.round(f.traditionalSqm*tRate*cycles);
-    return{id:f.id,name:f.name||'חזית',direction:f.direction||'',systemSqm:f.systemSqm||0,tradSqm:f.traditionalSqm||0,goNogo:f.goNogo||'go',robotTotal,tradTotal,cycles};
+    const robotTotal=po.robotPrice!==undefined?po.robotPrice:calc.robotTotal;
+    const tradTotal=po.tradPrice!==undefined?po.tradPrice:calc.tradTotal;
+    return{id:f.id,name:f.name||'חזית',direction:f.direction||'',systemSqm:f.systemSqm||0,tradSqm:f.traditionalSqm||0,goNogo:f.goNogo||'go',robotTotal,tradTotal,cycles,pricePerSqm:calc.pricePerSqm};
   });
-  quoteData={facadeRows,cur,vat,scanPrice,disc1,disc2,disc3,rDisc,defCycles,
+  quoteData={facadeRows,cur,vat,scanPrice,disc1,disc2,disc3,defCycles,
     buildingName:v('building-name'),buildingAddress:v('building-address'),
     companyName:v('company-name'),contactName:v('contact-name'),
     contactPhone:v('contact-phone'),contactEmail:v('contact-email'),
@@ -1252,20 +1331,24 @@ function calcYear(year){
   const scanNet=Math.round(d.scanPrice*(1-scanDisc/100));
   let cleanSub=0,rows='';
   d.facadeRows.forEach(f=>{
-    if(f.systemSqm>0){cleanSub+=f.robotTotal;rows+=`<tr><td>${f.name}${f.direction?' ('+f.direction+')':''}</td><td><span class="tag-robot">ניקוי רובוט</span></td><td>${f.systemSqm.toLocaleString()} מ״ר</td><td>${d.cur}${Math.round(f.robotTotal/f.cycles).toLocaleString()}</td><td>${f.cycles}</td><td class="teal-text">${d.cur}${f.robotTotal.toLocaleString()}</td></tr>`;}
-    if(f.tradSqm>0){cleanSub+=f.tradTotal;rows+=`<tr><td>${f.name}${f.direction?' ('+f.direction+')':''}</td><td><span class="tag-traditional">ניקוי מסורתי</span></td><td>${f.tradSqm.toLocaleString()} מ״ר</td><td>${d.cur}${Math.round(f.tradTotal/f.cycles).toLocaleString()}</td><td>${f.cycles}</td><td>${d.cur}${f.tradTotal.toLocaleString()}</td></tr>`;}
+    const ppsq=f.pricePerSqm?` (${d.cur}${f.pricePerSqm}/מ״ר)`:'';
+    const ed=(v)=>`<span class="editable" contenteditable="true">${v}</span>`;
+    if(f.systemSqm>0){cleanSub+=f.robotTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':'')')}</td><td><span class="tag-robot">ניקוי רובוט</span></td><td>${ed(f.systemSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.robotTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td class="teal-text">${ed(d.cur+f.robotTotal.toLocaleString())}</td></tr>`;}
+    if(f.tradSqm>0){cleanSub+=f.tradTotal;rows+=`<tr><td>${ed(f.name+(f.direction?' ('+f.direction+')':'')')}</td><td><span class="tag-traditional">ניקוי מסורתי</span></td><td>${ed(f.tradSqm.toLocaleString()+' מ״ר'+ppsq)}</td><td>${ed(d.cur+Math.round(f.tradTotal/f.cycles).toLocaleString())}</td><td>${ed(f.cycles)}</td><td>${ed(d.cur+f.tradTotal.toLocaleString())}</td></tr>`;}
   });
-  const afterDisc=Math.round(cleanSub*(1-d.rDisc/100));
-  const bVat=afterDisc+scanNet;
+  const bVat=cleanSub+scanNet;
   const vatAmt=Math.round(bVat*d.vat/100);
   const total=bVat+vatAmt;
-  return{scanDisc,scanNet,cleanSub,afterDisc,bVat,vatAmt,total,rows};
+  return{scanDisc,scanNet,cleanSub,bVat,vatAmt,total,rows};
 }
+
+function e(content){return `<span class="editable" contenteditable="true">${content}</span>`;}
 
 function renderQuoteYear(year){
   const d=quoteData;if(!d.facadeRows)return;
-  const {scanDisc,scanNet,cleanSub,afterDisc,bVat,vatAmt,total,rows}=calcYear(year);
+  const {scanDisc,scanNet,cleanSub,bVat,vatAmt,total,rows}=calcYear(year);
   document.getElementById('quote-preview').innerHTML=`
+  <div class="edit-hint">✏️ לחץ על כל טקסט או מספר בטבלה כדי לערוך אותו לפני הייצוא ל-PDF</div>
   <div class="year-summary-grid">
     <div class="summary-tile"><div class="summary-tile-label">לפני מע״מ</div><div class="summary-tile-value teal">${d.cur}${bVat.toLocaleString()}</div><div class="summary-tile-sub">שנה ${year}</div></div>
     <div class="summary-tile"><div class="summary-tile-label">מע״מ (${d.vat}%)</div><div class="summary-tile-value">${d.cur}${vatAmt.toLocaleString()}</div></div>
@@ -1276,31 +1359,30 @@ function renderQuoteYear(year){
     <thead><tr><th>אזור</th><th>שירות</th><th>שטח</th><th>למחזור</th><th>מחזורים</th><th>סה״כ</th></tr></thead>
     <tbody>
       ${rows}
-      <tr class="subtotal-row"><td colspan="5">סה״כ ניקיון לפני הנחה</td><td>${d.cur}${cleanSub.toLocaleString()}</td></tr>
-      <tr class="subtotal-row"><td colspan="4">הנחת רובוט ${d.rDisc}%</td><td colspan="2" style="color:var(--success)">−${d.cur}${(cleanSub-afterDisc).toLocaleString()}</td></tr>
-      <tr class="subtotal-row"><td colspan="5">סריקת מעטפת (${scanDisc}% הנחה)</td><td>${scanDisc===100?'<span style="color:var(--success)">חינם!</span>':d.cur+scanNet.toLocaleString()}</td></tr>
-      <tr class="subtotal-row"><td colspan="5">מע״מ ${d.vat}%</td><td>${d.cur}${vatAmt.toLocaleString()}</td></tr>
-      <tr class="total-row"><td colspan="5">סה״כ שנה ${year} כולל מע״מ</td><td class="teal-text">${d.cur}${total.toLocaleString()}</td></tr>
+      <tr class="subtotal-row"><td colspan="5">${e('סה״כ ניקיון')}</td><td>${e(d.cur+cleanSub.toLocaleString())}</td></tr>
+      <tr class="subtotal-row"><td colspan="5">${e('סריקת מעטפת ('+scanDisc+'% הנחה)')}</td><td>${scanDisc===100?'<span style="color:var(--success)">חינם!</span>':e(d.cur+scanNet.toLocaleString())}</td></tr>
+      <tr class="subtotal-row"><td colspan="5">${e('מע״מ '+d.vat+'%')}</td><td>${e(d.cur+vatAmt.toLocaleString())}</td></tr>
+      <tr class="total-row"><td colspan="5">${e('סה״כ שנה '+year+' כולל מע״מ')}</td><td class="teal-text">${e(d.cur+total.toLocaleString())}</td></tr>
     </tbody>
   </table>`;
 }
 
 function renderAllYears(){
   const d=quoteData;if(!d.facadeRows)return;
-  let html='',grand=0;
+  let html='<div class="edit-hint">✏️ לחץ על כל טקסט או מספר בטבלה כדי לערוך אותו לפני הייצוא ל-PDF</div>',grand=0;
   [1,2,3].forEach(year=>{
-    const {scanDisc,scanNet,afterDisc,bVat,vatAmt,total}=calcYear(year);
+    const {scanDisc,scanNet,bVat,vatAmt,total,cleanSub}=calcYear(year);
     grand+=total;
     html+=`<div style="margin-bottom:24px">
-      <div class="doc-year-header">שנה ${year} <span class="doc-year-discount">סריקה: ${scanDisc}% הנחה</span></div>
+      <div class="doc-year-header">${e('שנה '+year)} <span class="doc-year-discount">${e('סריקה: '+scanDisc+'% הנחה')}</span></div>
       <table class="quote-table"><tbody>
-        <tr class="subtotal-row"><td colspan="4">סה״כ ניקיון לאחר הנחות</td><td>${d.cur}${afterDisc.toLocaleString()}</td></tr>
-        <tr class="subtotal-row"><td colspan="4">סריקת מעטפת</td><td>${scanDisc===100?'חינם':d.cur+scanNet.toLocaleString()}</td></tr>
-        <tr class="subtotal-row"><td colspan="4">מע״מ ${d.vat}%</td><td>${d.cur}${vatAmt.toLocaleString()}</td></tr>
-        <tr class="total-row"><td colspan="4">סה״כ שנה ${year}</td><td class="teal-text">${d.cur}${total.toLocaleString()}</td></tr>
+        <tr class="subtotal-row"><td colspan="4">${e('סה״כ ניקיון')}</td><td>${e(d.cur+cleanSub.toLocaleString())}</td></tr>
+        <tr class="subtotal-row"><td colspan="4">${e('סריקת מעטפת')}</td><td>${scanDisc===100?e('חינם'):e(d.cur+scanNet.toLocaleString())}</td></tr>
+        <tr class="subtotal-row"><td colspan="4">${e('מע״מ '+d.vat+'%')}</td><td>${e(d.cur+vatAmt.toLocaleString())}</td></tr>
+        <tr class="total-row"><td colspan="4">${e('סה״כ שנה '+year)}</td><td class="teal-text">${e(d.cur+total.toLocaleString())}</td></tr>
       </tbody></table></div>`;
   });
-  html+=`<div style="background:var(--navy);color:white;padding:16px 20px;border-radius:10px;display:flex;justify-content:space-between;font-weight:700"><span>סה״כ 3 שנים כולל מע״מ</span><span style="color:var(--teal);font-size:1.2rem">${d.cur}${grand.toLocaleString()}</span></div>`;
+  html+=`<div style="background:var(--navy);color:white;padding:16px 20px;border-radius:10px;display:flex;justify-content:space-between;font-weight:700"><span>${e('סה״כ 3 שנים כולל מע״מ')}</span><span style="color:var(--teal);font-size:1.2rem">${e(d.cur+grand.toLocaleString())}</span></div>`;
   document.getElementById('quote-preview').innerHTML=html;
 }
 
