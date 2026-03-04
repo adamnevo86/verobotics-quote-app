@@ -1119,7 +1119,7 @@ let facades=[], currentPage=0, quoteData={}, facadeIdCounter=0;
 const DIRECTIONS=['צפון','דרום','מזרח','מערב','צפון-מזרח','צפון-מערב','דרום-מזרח','דרום-מערב'];
 
 function goTo(n){
-  document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));
+  for(let i=0;i<5;i++){const p=document.getElementById('page-'+i);if(p)p.classList.toggle('active',i===n);}
   document.querySelectorAll('.step-tab').forEach((t,i)=>{
     t.classList.remove('active','completed');
     if(i===n)t.classList.add('active');
